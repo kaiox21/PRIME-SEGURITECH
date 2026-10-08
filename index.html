@@ -3,725 +3,907 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prime Seguritech | Segurança eletrônica e TI com inteligência artificial</title>
-<meta name="description" content="A Prime Seguritech está construindo o Prime Sentinel, uma central de monitoramento e suporte de TI com IA (Claude, da Anthropic) que faz a triagem de alertas, resume eventos e automatiza relatórios para pequenas e médias empresas.">
-<meta property="og:title" content="Prime Seguritech | Segurança eletrônica e TI com IA">
-<meta property="og:description" content="Prime Sentinel: triagem de alertas, assistente de TI e relatórios automáticos com IA. Monitoramento 24h com decisão humana.">
+<title>Prime Seguritech | Monitoramento e TI com inteligência artificial</title>
+<meta name="description" content="A Prime Seguritech está construindo o Prime Sentinel: uma central de monitoramento com IA (Claude, da Anthropic) que lê sensores, câmeras e histórico do cliente e entrega ao operador a prioridade, o resumo e o próximo passo de cada evento.">
+<meta property="og:title" content="Prime Seguritech | Monitoramento e TI com IA">
+<meta property="og:description" content="Prime Sentinel: cada disparo chega à central já explicado. A IA sugere, o operador decide.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#0a0c14">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2Z'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%231a3a8f' d='M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #ffffff;
-    --ink: #000000;
-    --ink-2: #4f4f4f;
-    --ink-3: #8a8a8a;
-    --line: #e0e0e0;
-    --soft: #f5f5f5;
-    --dark: #0a0c14;
-    --dark-2: #111420;
-    --dark-3: #181c2e;
-    --line-dark: #23283d;
-    --line-dark-2: #2f3550;
-    --on-dark: #ffffff;
-    --on-dark-2: #a3a8bc;
-    /* cores da marca Prime */
+    --white: #ffffff;
+    --paper: #f3f5f9;
+    --ink: #0d1220;
+    --ink-2: #4a5168;
+    --ink-3: #7b8299;
+    --line: #dde1ea;
+    --night: #0a0c14;
+    --night-2: #111420;
+    --night-3: #181c2e;
+    --night-line: #262c44;
+    --on-night: #eef1f8;
+    --on-night-2: #9aa1b8;
     --brand: #1a3a8f;
     --brand-ui: #2f63e0;
-    --brand-bright: #4a8aff;
-    --blue: var(--brand-bright);
-    --blue-soft: #8fb4ff;
-    --red: #ff4444;
-    --green: #2fd572;
+    --signal: #4a8aff;
+    --alarm: #ff4444;
     --amber: #ffb020;
-    --radius: 20px;
+    --ok: #2fd572;
     --gutter: 72px;
-    --sans: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    --max: 1360px;
+    --font: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    background: var(--white); color: var(--ink);
+    font-family: var(--font); font-size: 18px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
-  a { color: inherit; text-decoration: none; }
-  img, svg { display: block; }
-  .wrap { max-width: 1440px; margin: 0 auto; padding: 0 var(--gutter); }
+  a { color: inherit; }
+  svg { display: block; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); }
+  :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; border-radius: 4px; }
 
-  /* ── NAV ── */
-  .nav {
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(255,255,255,0.86);
-    backdrop-filter: saturate(160%) blur(14px);
-    -webkit-backdrop-filter: saturate(160%) blur(14px);
-    transition: background .3s, color .3s;
-  }
-  .nav.on-dark { background: rgba(10,12,20,0.88); color: var(--on-dark); }
-  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; }
-  .logo { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
-  .logo-mark { width: 26px; height: 26px; color: var(--brand); }
-  .nav.on-dark .logo-mark, .dark .logo-mark { color: var(--brand-bright); }
-  .logo sup { font-size: 9px; font-weight: 400; margin-left: 1px; color: var(--ink-3); }
-  .nav-links { display: flex; gap: 32px; list-style: none; }
-  .nav-links a { font-size: 19px; transition: opacity .2s; }
-  .nav-links a:hover { opacity: .55; }
+  /* ── tipografia ── */
+  h1, h2 { font-stretch: 78%; font-weight: 650; letter-spacing: -0.012em; }
+  h1 { font-size: clamp(46px, 6.6vw, 96px); line-height: 0.98; }
+  h2 { font-size: clamp(36px, 4.6vw, 64px); line-height: 1.02; }
+  h3 { font-size: 22px; font-weight: 600; line-height: 1.25; letter-spacing: -0.005em; }
+  .lead { font-size: clamp(18px, 1.45vw, 21px); color: var(--ink-2); max-width: 60ch; line-height: 1.55; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ── botões ── */
   .btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--brand); color: #fff;
-    border-radius: 999px; padding: 11px 24px;
-    font-size: 16px; font-weight: 400; white-space: nowrap;
-    transition: transform .2s, opacity .2s;
-    border: 1px solid var(--brand);
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    border-radius: 999px; padding: 13px 26px; font: inherit; font-size: 16px; font-weight: 550;
+    text-decoration: none; white-space: nowrap; border: 1.5px solid var(--brand);
+    background: var(--brand); color: var(--white); cursor: pointer;
+    transition: background-color .2s, border-color .2s, color .2s;
   }
-  .btn:hover { transform: translateY(-1px); opacity: .85; }
-  .btn.ghost { background: transparent; color: var(--brand); }
-  .nav.on-dark .btn, .dark .btn { background: var(--brand-ui); color: #fff; border-color: var(--brand-ui); }
-  .dark .btn.ghost { background: transparent; color: var(--on-dark); border-color: var(--line-dark-2); }
-  .hamburger { display: none; background: none; border: 0; cursor: pointer; padding: 8px; color: inherit; }
-  .hamburger span { display: block; width: 24px; height: 1.5px; background: currentColor; margin: 6px 0; transition: transform .3s, opacity .3s; }
-  .hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
-  .mobile-menu {
-    display: none; position: fixed; inset: 80px 0 0 0; z-index: 49;
-    background: var(--bg); padding: 32px 16px;
-    flex-direction: column; gap: 8px;
-  }
-  .mobile-menu.open { display: flex; }
-  .mobile-menu a { font-size: 34px; letter-spacing: -0.02em; padding: 6px 0; }
-  .mobile-menu .btn { margin-top: 24px; justify-content: center; font-size: 18px; padding: 16px; }
+  .btn:hover { background: var(--brand-ui); border-color: var(--brand-ui); }
+  .btn.line { background: transparent; color: var(--brand); }
+  .btn.line:hover { background: var(--brand); color: var(--white); }
+  .on-night .btn { background: var(--brand-ui); border-color: var(--brand-ui); }
+  .on-night .btn:hover { background: var(--signal); border-color: var(--signal); }
+  .on-night .btn.line { background: transparent; color: var(--on-night); border-color: var(--night-line); }
+  .on-night .btn.line:hover { border-color: var(--on-night-2); }
 
-  /* ── TYPE ── */
-  h1 { font-size: clamp(44px, 6.2vw, 88px); font-weight: 400; line-height: 1.04; letter-spacing: -0.025em; }
-  h2 { font-size: clamp(36px, 4.4vw, 60px); font-weight: 400; line-height: 1.1; letter-spacing: -0.022em; }
-  h3 { font-size: clamp(24px, 2.2vw, 30px); font-weight: 400; line-height: 1.2; letter-spacing: -0.02em; }
-  .lead { font-size: clamp(18px, 1.5vw, 21px); font-weight: 300; color: var(--ink-2); line-height: 1.55; }
-  .lead b { font-weight: 500; color: var(--ink); }
-  .eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400; color: var(--brand); }
-  .dark .eyebrow { color: var(--brand-bright); }
-  .muted { color: var(--ink-2); font-weight: 300; }
+  /* ── nav ── */
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.9); backdrop-filter: blur(14px) saturate(160%); -webkit-backdrop-filter: blur(14px) saturate(160%); border-bottom: 1px solid transparent; transition: border-color .3s; }
+  .nav.scrolled { border-bottom-color: var(--line); }
+  .nav-inner { height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-size: 21px; font-weight: 700; font-stretch: 85%; letter-spacing: -0.01em; }
+  .logo svg { width: 26px; height: 26px; color: var(--brand); }
+  .nav-links { display: flex; gap: 30px; list-style: none; }
+  .nav-links a { text-decoration: none; font-size: 17px; color: var(--ink-2); transition: color .2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .burger { display: none; background: none; border: 0; padding: 8px; cursor: pointer; color: var(--ink); }
+  .burger span { display: block; width: 24px; height: 2px; background: currentColor; margin: 5px 0; transition: transform .3s, opacity .3s; }
+  .burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .menu { display: none; position: fixed; inset: 76px 0 0; z-index: 49; background: var(--white); padding: 28px 16px; flex-direction: column; gap: 4px; }
+  .menu.open { display: flex; }
+  .menu a { font-size: 34px; font-weight: 650; font-stretch: 78%; text-decoration: none; padding: 6px 0; }
+  .menu .btn { margin-top: 24px; font-size: 18px; padding: 16px; }
 
-  /* ── HERO ── */
-  .hero { padding: 120px 0 72px; text-align: center; }
-  .badge {
-    display: inline-flex; align-items: center; gap: 10px;
-    border: 1px solid var(--line); border-radius: 999px;
-    padding: 7px 16px 7px 12px; font-size: 14px; color: var(--ink-2);
-    margin-bottom: 36px;
-  }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-bright); box-shadow: 0 0 0 4px rgba(74,138,255,.22); animation: pulse 2.4s ease-in-out infinite; }
-  @keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(74,138,255,0); } }
-  .hero h1 { max-width: 1040px; margin: 0 auto; }
-  .hero .lead { max-width: 680px; margin: 28px auto 0; }
-  .hero-ctas { display: flex; gap: 12px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+  /* ── hero ── */
+  .hero { padding: 72px 0 0; }
+  .hero-top { display: grid; grid-template-columns: 1.25fr 1fr; gap: 64px; align-items: end; }
+  .hero h1 { max-width: 13ch; }
+  .hero-side .lead { margin-bottom: 28px; }
+  .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 
-  /* ── CONSOLE MOCK ── */
-  .stage {
-    margin-top: 80px; background: var(--soft); border-radius: 4px;
-    padding: 64px 48px 0; overflow: hidden; position: relative;
+  .central {
+    margin-top: 64px; background: var(--night); color: var(--on-night);
+    border-radius: 28px; overflow: hidden;
+    display: grid; grid-template-columns: 1.45fr 1fr; min-height: 560px;
   }
-  .stage-caption { position: absolute; top: 20px; left: 24px; font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
-  .console {
-    max-width: 1080px; margin: 0 auto;
-    background: var(--dark-2); color: var(--on-dark);
-    border-radius: 16px 16px 0 0; overflow: hidden;
-    box-shadow: 0 40px 80px -30px rgba(0,0,0,.45);
-    text-align: left;
-  }
-  .console-bar { display: flex; align-items: center; gap: 8px; padding: 14px 18px; border-bottom: 1px solid var(--line-dark); }
-  .console-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--line-dark-2); }
-  .console-bar span { margin-left: 14px; font-family: var(--mono); font-size: 12px; color: var(--on-dark-2); }
-  .console-body { display: grid; grid-template-columns: 1.15fr 1fr; min-height: 420px; }
-  .feed { border-right: 1px solid var(--line-dark); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
-  .feed-title, .panel-title { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--on-dark-2); margin-bottom: 4px; }
-  .event {
-    display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
-    padding: 12px 14px; border-radius: 10px; background: var(--dark-3);
-    border: 1px solid transparent; font-size: 14px;
-    opacity: 0; transform: translateY(8px);
-    animation: evIn .6s ease forwards;
-  }
-  .event:nth-child(2) { animation-delay: .2s; }
-  .event:nth-child(3) { animation-delay: .5s; }
-  .event:nth-child(4) { animation-delay: .8s; }
-  .event:nth-child(5) { animation-delay: 1.1s; }
-  @keyframes evIn { to { opacity: 1; transform: none; } }
-  .event.active { border-color: #3a4266; background: #1e2338; }
-  .sev { width: 8px; height: 8px; border-radius: 50%; }
-  .sev.r { background: var(--red); } .sev.a { background: var(--amber); } .sev.g { background: var(--green); } .sev.b { background: var(--blue); }
-  .event small { display: block; color: var(--on-dark-2); font-size: 12px; margin-top: 2px; }
-  .event time { font-family: var(--mono); font-size: 11px; color: var(--on-dark-2); }
-  .panel { padding: 18px 22px; display: flex; flex-direction: column; gap: 14px; }
-  .ai-box { background: var(--dark-3); border-radius: 12px; padding: 16px 18px; font-size: 14px; line-height: 1.6; }
-  .ai-head { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--blue-soft); margin-bottom: 8px; letter-spacing: .04em; }
-  .ai-head::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--blue-soft); }
-  .typing::after { content: "▍"; animation: blink 1s steps(1) infinite; color: var(--blue-soft); }
+  .central-plan { position: relative; padding: 28px 28px 24px; border-right: 1px solid var(--night-line); display: flex; flex-direction: column; }
+  .central-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 18px; }
+  .central-head p { font-size: 15px; color: var(--on-night-2); }
+  .central-head strong { color: var(--on-night); font-weight: 600; }
+  .clock { font-size: 34px; font-weight: 600; font-stretch: 75%; color: var(--on-night); }
+  .plan { width: 100%; height: auto; flex: 1; }
+  .plan .wall { fill: none; stroke: #3a4266; stroke-width: 3; }
+  .plan .room { fill: var(--night-2); transition: fill .6s; }
+  .plan .room-label { fill: var(--on-night-2); font-family: var(--font); font-size: 13px; }
+  .plan .room-label tspan { fill: #5d6584; }
+  .plan .sensor { fill: #3a4266; transition: fill .3s; }
+  .plan .ring { fill: none; stroke: var(--alarm); stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .plan .door { stroke: #3a4266; stroke-width: 5; stroke-linecap: round; transition: stroke .3s; }
+  .plan .cone { fill: var(--signal); opacity: 0; transition: opacity .6s; }
+  .plan .cam { fill: #5d6584; transition: fill .3s; }
+  .plan .door-label, .plan .cam-label { fill: #5d6584; font-family: var(--font); font-size: 12px; transition: fill .3s; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 12px; font-size: 13px; color: var(--on-night-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+  /* estados da sequência */
+  .central.s1 #z3 { fill: #2a1520; }
+  .central.s1 #s3a { fill: var(--alarm); }
+  .central.s1 #s3a-ring { animation: ring 1.6s ease-out infinite; }
+  .central.s2 #s3b { fill: var(--alarm); }
+  .central.s2 #s3b-ring { animation: ring 1.6s ease-out .3s infinite; }
+  .central.s3 #door-side { stroke: var(--alarm); }
+  .central.s3 #door-side-label { fill: #ff8a8a; }
+  .central.s4 #cone { opacity: .16; }
+  .central.s4 #cam4 { fill: var(--signal); }
+  .central.s4 #cam4-label { fill: var(--signal); }
+  @keyframes ring { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
+
+  .central-feed { padding: 28px; display: flex; flex-direction: column; gap: 14px; background: var(--night-2); }
+  .feed-title { font-size: 15px; color: var(--on-night-2); }
+  .events { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .events li { display: grid; grid-template-columns: 52px 1fr; gap: 10px; font-size: 15px; padding: 10px 12px; border-radius: 10px; background: var(--night-3); animation: in .45s ease both; }
+  .events time { color: var(--on-night-2); }
+  .events li.hot { box-shadow: inset 3px 0 0 var(--alarm); }
+  @keyframes in { from { opacity: 0; transform: translateY(6px); } }
+  .triage { margin-top: auto; border-radius: 16px; background: var(--night-3); padding: 20px; border: 1px solid var(--night-line); opacity: 0; transform: translateY(8px); transition: opacity .5s, transform .5s; }
+  .triage.show { opacity: 1; transform: none; }
+  .triage-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .who { font-size: 13px; color: var(--signal); font-weight: 600; }
+  .prio { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 650; color: #ffb4b4; background: rgba(255,68,68,.12); padding: 4px 10px; border-radius: 999px; }
+  .prio::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--alarm); }
+  .triage p { font-size: 15.5px; line-height: 1.55; min-height: 4.6em; }
+  .triage .caret::after { content: ""; display: inline-block; width: 2px; height: 1em; background: var(--signal); margin-left: 2px; vertical-align: -2px; animation: blink 1s steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line-dark-2); color: var(--on-dark-2); padding: 4px 10px; border-radius: 999px; }
-  .chip.hot { border-color: rgba(255,68,68,.5); color: #ff8a83; }
-  .actions { display: flex; gap: 8px; margin-top: auto; }
-  .actions span { flex: 1; text-align: center; font-size: 13px; padding: 10px; border-radius: 999px; border: 1px solid var(--line-dark-2); color: var(--on-dark-2); }
-  .actions span.primary { background: var(--on-dark); color: var(--dark); border-color: var(--on-dark); }
-  .human-note { font-size: 12px; color: var(--on-dark-2); display: flex; gap: 8px; align-items: center; }
+  .triage-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .triage-actions span { font-size: 14px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--night-line); color: var(--on-night-2); }
+  .triage-actions span.first { background: var(--on-night); color: var(--night); border-color: var(--on-night); font-weight: 600; }
+  .triage .triage-note { font-size: 13px; color: var(--on-night-2); margin-top: 12px; min-height: 0; }
+  .replay { align-self: flex-start; background: none; border: 0; color: var(--on-night-2); font: inherit; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 2px 0; }
+  .replay:hover { color: var(--on-night); }
+  .disclaimer { font-size: 14px; color: var(--ink-3); margin-top: 14px; }
+  .disclaimer a { color: var(--brand); }
 
-  /* ── SECTION BASE ── */
-  section { position: relative; }
-  .sec { padding-top: 160px; padding-bottom: 160px; }
-  .sec-head { display: grid; grid-template-columns: 284px 1fr; gap: 0; align-items: start; margin-bottom: 96px; }
-  .sec-head .eyebrow { padding-top: 14px; }
-  .sec-head .lead { margin-top: 28px; max-width: 640px; }
+  /* ── seções ── */
+  .sec { padding-top: 140px; padding-bottom: 140px; }
+  /* cabeçalho de seção no padrão Wama: rótulo à esquerda, título deslocado */
+  .sec-head { display: grid; grid-template-columns: 260px 1fr; margin-bottom: 72px; }
+  .sec-head > div { max-width: 820px; }
+  .sec-head .lead { margin-top: 22px; }
+  .label { font-size: 13px; font-weight: 550; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); padding-top: 16px; }
+  .on-night .label { color: var(--signal); }
+  .curve { border-radius: 50% 50% 0 0 / 90px 90px 0 0; }
+  .paper { background: var(--paper); }
+  .on-night { background: var(--night); color: var(--on-night); }
+  .on-night .lead { color: var(--on-night-2); }
+  .gap-top { margin-top: 140px; }
 
-  /* ── DARK ── */
-  .dark { background: var(--dark); color: var(--on-dark); }
-  .dark .muted, .dark .lead { color: var(--on-dark-2); }
-  .dark .lead b { color: var(--on-dark); }
-  .curve { border-radius: 50% 50% 0 0 / 80px 80px 0 0; margin-top: -1px; }
+  /* noite na central */
+  .night { list-style: none; position: relative; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .night > li { position: relative; padding-right: 28px; }
+  .night .t { display: block; font-size: 32px; font-weight: 650; font-stretch: 75%; line-height: 1; }
+  /* trilho: bolinha + linha até a próxima, no mesmo elemento para nunca desalinhar */
+  .night .rail { position: relative; display: block; height: 14px; margin-top: 18px; margin-right: -28px; }
+  .night .rail::before { content: ""; position: absolute; left: 7px; right: 0; top: 6px; height: 2px; background: var(--brand); opacity: .35; }
+  .night li:first-child .rail::before { opacity: .7; }
+  .night li:last-child .rail::before { background: linear-gradient(90deg, var(--brand), transparent); }
+  .night .rail::after { content: ""; position: absolute; left: 0; top: 0; width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; background: var(--paper); border: 2px solid var(--brand); }
+  .night dl { margin-top: 28px; display: grid; gap: 6px; }
+  .night dt { font-size: 14px; color: var(--ink-3); margin-top: 8px; }
+  .night dd { font-size: 16.5px; line-height: 1.5; }
+  .night dd.ia { color: var(--brand); font-weight: 550; }
+  .tag-p { display: inline-block; font-size: 13px; font-weight: 650; padding: 1px 9px; border-radius: 999px; margin-left: 4px; vertical-align: 1px; }
+  .tag-p.alta { background: rgba(255,68,68,.12); color: #c42121; }
+  .tag-p.media { background: rgba(255,176,32,.18); color: #8a5a00; }
+  .tag-p.baixa { background: rgba(47,213,114,.16); color: #137a3e; }
+  /* versão noturna da linha do tempo */
+  .on-night .night dt { color: var(--on-night-2); }
+  .on-night .night dd { color: var(--on-night); }
+  .on-night .night dd.ia { color: var(--signal); }
+  .on-night .night .rail::before { background: var(--signal); }
+  .on-night .night li:last-child .rail::before { background: linear-gradient(90deg, var(--signal), transparent); }
+  .on-night .night .rail::after { background: var(--night); border-color: var(--signal); }
+  .on-night .night li:nth-child(3) .rail::after { background: var(--alarm); border-color: var(--alarm); box-shadow: 0 0 0 5px rgba(255,68,68,.18); }
+  .on-night .tag-p.alta { background: rgba(255,68,68,.16); color: #ffb4b4; }
+  .on-night .tag-p.media { background: rgba(255,176,32,.16); color: #ffd27a; }
+  .on-night .tag-p.baixa { background: rgba(47,213,114,.14); color: #8ff0b6; }
 
-  /* ── NUMBERS ── */
-  .numbers { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line-dark); }
-  .num { padding: 40px 24px 0 0; }
-  .num strong { display: block; font-size: clamp(44px, 4.6vw, 64px); font-weight: 300; letter-spacing: -0.04em; line-height: 1; }
-  .num strong em { font-style: normal; color: var(--brand-bright); }
-  .num p { margin-top: 14px; color: var(--on-dark-2); font-size: 16px; font-weight: 300; max-width: 220px; }
+  /* módulos */
+  .bento { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
+  .mod { border-radius: 24px; padding: 32px; background: var(--paper); display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+  .mod.big { grid-row: span 2; background: var(--night); color: var(--on-night); }
+  .mod p { color: var(--ink-2); max-width: 46ch; }
+  .mod.big p { color: var(--on-night-2); }
+  .mod .art { margin-top: auto; padding-top: 24px; }
+  .queue { display: flex; flex-direction: column; gap: 10px; }
+  .queue div { display: grid; grid-template-columns: 10px 1fr auto; gap: 14px; align-items: center; background: var(--night-3); border-radius: 12px; padding: 14px 16px; font-size: 15px; }
+  .queue i { width: 10px; height: 10px; border-radius: 50%; }
+  .queue small { color: var(--on-night-2); font-size: 13px; display: block; margin-top: 2px; }
+  .queue b { font-weight: 600; }
+  .queue em { font-style: normal; font-size: 13px; font-weight: 650; padding: 3px 10px; border-radius: 999px; }
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; }
+  .chat span { max-width: 85%; padding: 9px 13px; border-radius: 16px; line-height: 1.45; }
+  .chat .c { background: var(--white); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .chat .s { background: var(--brand); color: var(--white); align-self: flex-end; border-bottom-right-radius: 4px; }
+  .report { background: var(--white); border-radius: 14px; padding: 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .report div { border-radius: 10px; background: var(--paper); padding: 12px; }
+  .report strong { display: block; font-size: 30px; font-weight: 650; font-stretch: 75%; line-height: 1; }
+  .report small { font-size: 13px; color: var(--ink-3); }
 
-  /* ── PRODUCT CARDS ── */
-  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .feature .media {
-    aspect-ratio: 1 / 1.05; background: var(--dark); border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden; position: relative; padding: 28px;
-  }
-  .feature h3 { margin-top: 24px; }
-  .feature p { margin-top: 10px; font-size: 17px; }
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
-  .tag { font-size: 14px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; color: var(--ink-2); }
-  .dark .tag { border-color: var(--line-dark-2); color: var(--on-dark-2); }
+  /* decisão humana */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .col { border-radius: 24px; padding: 36px; }
+  .col.ia { background: var(--night-2); border: 1px solid var(--night-line); }
+  .col.hu { background: var(--brand); }
+  .col h3 { font-size: 26px; font-stretch: 85%; }
+  .col ul { list-style: none; margin-top: 22px; display: flex; flex-direction: column; gap: 14px; }
+  .col li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; font-size: 17px; line-height: 1.45; }
+  .col li svg { margin-top: 3px; }
+  .col.ia li { color: var(--on-night-2); }
+  .col.hu li { color: #dfe7ff; }
+  .why { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; padding-top: 40px; border-top: 1px solid var(--night-line); }
+  .why h3 { font-size: 20px; }
+  .why p { margin-top: 8px; color: var(--on-night-2); font-size: 16px; }
 
-  /* mini mocks inside feature media */
-  .mini { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 10px; color: var(--on-dark); font-size: 13px; }
-  .mini-row { background: var(--dark-3); border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
-  .mini-row b { font-weight: 500; }
-  .mini-row .bar { flex: 1; height: 6px; border-radius: 3px; background: var(--line-dark); overflow: hidden; }
-  .mini-row .bar i { display: block; height: 100%; background: var(--on-dark); border-radius: 3px; }
-  .bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; line-height: 1.45; }
-  .bubble.in { background: var(--dark-3); align-self: flex-start; border-bottom-left-radius: 4px; }
-  .bubble.out { background: var(--brand-ui); align-self: flex-end; border-bottom-right-radius: 4px; }
-  .doc { background: #f4f4f4; color: #111; border-radius: 8px; padding: 18px; width: 100%; max-width: 280px; transform: rotate(-3deg); box-shadow: 0 30px 60px -20px rgba(255,255,255,.15); }
-  .doc h4 { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
-  .doc .ln { height: 6px; background: #ddd; border-radius: 3px; margin: 7px 0; }
-  .doc .ln.s { width: 60%; } .doc .ln.m { width: 82%; }
-  .doc .kpis { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin: 12px 0; }
-  .doc .kpis div { background: #fff; border-radius: 6px; padding: 8px; font-size: 16px; font-weight: 500; }
-  .doc .kpis small { display: block; font-size: 9px; color: #777; font-weight: 400; }
+  /* prova */
+  .proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .proof div { border-top: 2px solid var(--ink); padding-top: 22px; }
+  .proof strong { display: block; font-size: clamp(54px, 6vw, 88px); line-height: .95; font-weight: 650; font-stretch: 72%; letter-spacing: -0.02em; }
+  .proof p { margin-top: 12px; color: var(--ink-2); max-width: 30ch; }
+  .proof-note { margin-top: 36px; font-size: 15px; color: var(--ink-3); }
+  .proof-note a { color: var(--brand); }
 
-  /* ── FLOW ── */
-  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--line); }
-  .step { padding: 36px 28px 0 0; position: relative; }
-  .step .n { font-family: var(--mono); font-size: 13px; color: var(--ink-3); }
-  .step h3 { margin-top: 56px; font-size: 26px; }
-  .step p { margin-top: 12px; font-size: 16px; }
-  .step.human h3::after { content: "humano"; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; vertical-align: middle; margin-left: 10px; padding: 3px 8px; border-radius: 999px; background: var(--brand); color: #fff; }
+  /* serviços */
+  .services { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .services div { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .services div:nth-child(-n+2) { border-top: 1px solid var(--line); }
+  .services h3 { font-size: 19px; }
+  .services p { color: var(--ink-2); font-size: 16px; }
 
-  /* ── WHY CLAUDE ── */
-  .split { display: grid; grid-template-columns: 284px 1fr; }
-  .why-list { display: grid; grid-template-columns: 1fr 1fr; gap: 56px 48px; }
-  .why-item { border-top: 1px solid var(--line-dark); padding-top: 24px; }
-  .why-item h3 { font-size: 24px; }
-  .why-item p { margin-top: 10px; font-size: 16px; color: var(--on-dark-2); font-weight: 300; }
+  /* roadmap */
+  .road { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .road > li { border-radius: 24px; padding: 32px; background: var(--white); border: 1px solid var(--line); }
+  .road > li.now { background: var(--night); color: var(--on-night); border-color: var(--night); }
+  .road .when { font-size: 15px; font-weight: 600; color: var(--brand); display: inline-flex; align-items: center; gap: 8px; }
+  .road .now .when { color: var(--signal); }
+  .road .now .when::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 0 4px rgba(74,138,255,.25); }
+  .road h3 { margin-top: 28px; font-size: 26px; font-stretch: 85%; }
+  .road ul { list-style: none; margin-top: 16px; display: flex; flex-direction: column; gap: 9px; font-size: 16px; color: var(--ink-2); }
+  .road .now ul { color: var(--on-night-2); }
+  .road ul li { position: relative; padding-left: 16px; }
+  .road ul li::before { content: ""; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .6; }
+  .road a { color: var(--signal); }
 
-  /* ── SERVICES ── */
-  .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); }
-  .svc { padding: 36px 32px 40px 0; border-bottom: 1px solid var(--line); }
-  .svc .ico { width: 44px; height: 44px; border-radius: 12px; background: var(--soft); display: flex; align-items: center; justify-content: center; margin-bottom: 28px; }
-  .svc h3 { font-size: 24px; }
-  .svc p { margin-top: 10px; font-size: 16px; }
+  /* resultados (seção escura curva, como a de números do Wama) */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--night-line); }
+  .stats div { padding: 40px 24px 0 0; }
+  .stats strong { display: block; font-size: clamp(56px, 7vw, 104px); line-height: .92; font-weight: 600; font-stretch: 72%; letter-spacing: -0.02em; }
+  .stats strong span { color: var(--signal); }
+  .stats p { margin-top: 14px; color: var(--on-night-2); max-width: 28ch; }
+  .stats-note { margin-top: 48px; font-size: 15px; color: var(--on-night-2); }
 
-  /* ── ROADMAP ── */
-  .road { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .phase { border-radius: var(--radius); padding: 32px; background: var(--soft); display: flex; flex-direction: column; min-height: 320px; }
-  .phase.now { background: var(--dark); color: var(--on-dark); }
-  .phase .st { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
-  .phase h3 { margin-top: 40px; font-size: 28px; }
-  .phase ul { margin-top: 20px; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 16px; font-weight: 300; }
-  .phase ul li { display: flex; gap: 10px; }
-  .phase ul li::before { content: "—"; color: var(--ink-3); }
-  .phase.now ul li::before { color: var(--brand-bright); }
+  /* cases: grade de projetos do Wama */
+  .cases { display: grid; grid-template-columns: 1fr 1fr; gap: 56px 24px; }
+  .case { text-decoration: none; display: block; }
+  .case .media { aspect-ratio: 16 / 10; background: var(--paper); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .mock { width: min(68%, 380px); background: var(--night); color: var(--on-night); border-radius: 18px; padding: 20px; box-shadow: 0 40px 70px -30px rgba(13,18,32,.55); transform: rotate(-4deg); transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+  .case:nth-child(even) .mock { transform: rotate(3.5deg); }
+  .case:hover .mock { transform: rotate(0) scale(1.03); }
+  .mock-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .mock-top span:first-child { font-size: 12px; color: var(--signal); font-weight: 600; }
+  .pill-p { font-size: 12px; font-weight: 650; padding: 3px 9px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; }
+  .pill-p::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .pill-p.critica { background: rgba(255,68,68,.18); color: #ff9c9c; }
+  .pill-p.alta { background: rgba(255,68,68,.12); color: #ffb4b4; }
+  .pill-p.media { background: rgba(255,176,32,.14); color: #ffd27a; }
+  .mock p { font-size: 14px; line-height: 1.5; color: #d5dbea; }
+  .mock .bars { display: grid; gap: 6px; margin-top: 14px; }
+  .mock .bars i { display: block; height: 7px; border-radius: 4px; background: var(--night-3); }
+  .mock .bars i:nth-child(2) { width: 80%; } .mock .bars i:nth-child(3) { width: 55%; }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .pills span { font-size: 14px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; color: var(--ink-2); }
+  .case h3 { margin-top: 12px; font-size: clamp(26px, 2.4vw, 32px); font-weight: 600; font-stretch: 85%; }
+  .case .sub { color: var(--ink-2); margin-top: 4px; }
+  .case .go { display: inline-block; margin-top: 10px; color: var(--brand); font-weight: 550; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
 
-  /* ── QUOTE ── */
-  .quote { padding: 160px 0; text-align: center; }
-  .quote blockquote { font-size: clamp(30px, 3.6vw, 52px); font-weight: 300; letter-spacing: -0.03em; line-height: 1.18; max-width: 1100px; margin: 0 auto; }
-  .quote cite { display: block; margin-top: 36px; font-style: normal; color: var(--on-dark-2); font-size: 16px; }
+  /* serviços: cards com quadrado escuro e objeto de vidro */
+  .svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 48px 24px; }
+  .svc.wide { grid-column: span 2; }
+  .svc .media { height: 300px; background: var(--night); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .svc .media svg { width: 200px; height: 200px; }
+  .svc h3 { margin-top: 22px; font-size: 26px; font-weight: 600; font-stretch: 85%; }
+  .svc p { margin-top: 6px; color: var(--ink-2); font-size: 16.5px; max-width: 40ch; }
 
-  /* ── FAQ ── */
-  .faq-list { border-top: 1px solid var(--line); }
+  /* perguntas */
+  .faq { border-top: 1px solid var(--line); }
   details { border-bottom: 1px solid var(--line); }
-  summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 284px 1fr 40px; align-items: center; padding: 30px 0; }
+  summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 260px 1fr 30px; align-items: center; padding: 28px 0; font-size: clamp(19px, 1.7vw, 24px); font-weight: 550; }
+  summary .n { font-size: 15px; font-weight: 500; color: var(--ink-3); font-variant-numeric: tabular-nums; }
   summary::-webkit-details-marker { display: none; }
-  summary .n { font-family: var(--mono); font-size: 13px; color: var(--ink-3); }
-  summary h3 { font-size: clamp(20px, 1.8vw, 26px); }
-  summary .pm { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); position: relative; justify-self: end; transition: transform .3s; }
-  summary .pm::before, summary .pm::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.5px; background: var(--ink); transform: translate(-50%,-50%); }
-  summary .pm::after { transform: translate(-50%,-50%) rotate(90deg); transition: opacity .3s; }
+  summary .pm { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--line); position: relative; transition: border-color .2s; }
+  summary:hover .pm { border-color: var(--ink-3); }
+  summary .pm::before, summary .pm::after { content: ""; position: absolute; left: 50%; top: 50%; width: 11px; height: 1.5px; background: var(--ink); transform: translate(-50%,-50%); }
+  summary .pm::after { transform: translate(-50%,-50%) rotate(90deg); transition: opacity .2s; }
   details[open] summary .pm::after { opacity: 0; }
-  details .ans { padding: 0 40px 34px 284px; max-width: 1000px; color: var(--ink-2); font-weight: 300; font-size: 17px; }
+  details p { padding: 0 54px 28px 260px; color: var(--ink-2); max-width: calc(70ch + 260px); }
 
-  /* ── CTA ── */
-  .cta { padding-top: 180px; padding-bottom: 140px; text-align: center; }
-  .cta h2 { font-size: clamp(44px, 6vw, 88px); max-width: 1000px; margin: 0 auto; letter-spacing: -0.028em; }
-  .cta .lead { margin: 28px auto 0; max-width: 560px; }
-  .cta .hero-ctas { margin-top: 44px; }
-  .cta .btn { font-size: 18px; padding: 16px 32px; }
-
-  /* ── FOOTER ── */
-  footer { border-top: 1px solid var(--line-dark); padding: 56px 0 48px; }
-  .foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px; font-size: 15px; }
-  .foot h5 { font-size: 13px; font-weight: 400; letter-spacing: .08em; text-transform: uppercase; color: var(--on-dark-2); margin-bottom: 16px; }
+  /* cta + rodapé */
+  .cta { text-align: center; padding-top: 150px; padding-bottom: 120px; }
+  .cta h2 { font-size: clamp(44px, 6.4vw, 96px); max-width: 14ch; margin: 0 auto; line-height: .98; }
+  .cta .lead { margin: 24px auto 36px; }
+  .cta .ctas { justify-content: center; }
+  footer { border-top: 1px solid var(--night-line); padding-top: 48px; padding-bottom: 40px; }
+  .foot { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 32px; font-size: 15px; }
+  .foot h4 { font-size: 14px; font-weight: 600; color: var(--on-night-2); margin-bottom: 14px; }
   .foot ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .foot a:hover { opacity: .6; }
-  .foot .muted { max-width: 300px; margin-top: 14px; font-size: 15px; }
-  .legal { display: flex; justify-content: space-between; gap: 16px; margin-top: 64px; font-size: 13px; color: var(--on-dark-2); flex-wrap: wrap; }
+  .foot a { text-decoration: none; color: var(--on-night); }
+  .foot a:hover { color: var(--signal); }
+  .foot .logo svg { color: var(--signal); }
+  .foot .about { margin-top: 14px; color: var(--on-night-2); max-width: 34ch; }
+  .legal { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 56px; font-size: 13px; color: var(--on-night-2); }
 
-  /* ── WA FLOAT ── */
-  .wa {
-    position: fixed; right: 24px; bottom: 24px; z-index: 60;
-    width: 56px; height: 56px; border-radius: 50%; background: #25d366;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 10px 30px rgba(37,211,102,.35);
-    transition: transform .2s;
-  }
+  .wa { position: fixed; right: 22px; bottom: 22px; z-index: 60; width: 56px; height: 56px; border-radius: 50%; background: #25d366; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 28px rgba(37,211,102,.35); transition: transform .2s; }
   .wa:hover { transform: scale(1.06); }
 
-  /* ── REVEAL ── */
-  .rv { opacity: 0; transform: translateY(24px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
-  .rv.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
-    .rv, .event { opacity: 1; transform: none; }
     html { scroll-behavior: auto; }
   }
 
-  /* ── RESPONSIVE ── */
+  /* ── responsivo ── */
   @media (max-width: 1100px) {
     :root { --gutter: 40px; }
-    .sec-head, .split { grid-template-columns: 1fr; }
-    .sec-head .eyebrow, .split > .eyebrow { margin-bottom: 20px; padding-top: 0; }
-    summary { grid-template-columns: 64px 1fr 40px; }
-    details .ans { padding-left: 64px; }
-    .flow { grid-template-columns: 1fr 1fr; row-gap: 48px; }
-    .numbers { grid-template-columns: 1fr 1fr; row-gap: 32px; }
+    .hero-top { grid-template-columns: 1fr; gap: 28px; }
+    .central { grid-template-columns: 1fr; }
+    .central-plan { border-right: 0; border-bottom: 1px solid var(--night-line); }
+    .night { grid-template-columns: 1fr 1fr; row-gap: 56px; }
+    .night .rail { margin-right: 0; }
+    .night .rail::before { display: none; }
+    .services { grid-template-columns: 1fr; }
+    .services div:nth-child(2) { border-top: 0; }
+    .why { grid-template-columns: 1fr; gap: 28px; }
+    .sec-head { grid-template-columns: 1fr; }
+    .label { padding-top: 0; margin-bottom: 18px; }
+    summary { grid-template-columns: 56px 1fr 30px; }
+    details p { padding-left: 56px; }
+    .svc-grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 900px) {
-    .nav-links, .nav .nav-cta { display: none; }
-    .hamburger { display: block; }
-    .feature-grid, .svc-grid, .road { grid-template-columns: 1fr; }
-    .feature .media { aspect-ratio: 4 / 3; }
-    .console-body { grid-template-columns: 1fr; }
-    .feed { border-right: 0; border-bottom: 1px solid var(--line-dark); }
-    .why-list { grid-template-columns: 1fr; gap: 40px; }
+    .nav-links, .nav .btn { display: none; }
+    .burger { display: block; }
+    .bento, .split, .road, .stats, .cases { grid-template-columns: 1fr; }
+    .stats div { padding-top: 28px; }
+    .mod.big { grid-row: auto; }
+    .sec { padding-top: 104px; padding-bottom: 104px; }
+    .gap-top { margin-top: 104px; }
     .foot { grid-template-columns: 1fr 1fr; }
-    .sec { padding-top: 112px; padding-bottom: 112px; }
-    .sec-head { margin-bottom: 64px; }
   }
   @media (max-width: 560px) {
     :root { --gutter: 16px; }
     body { font-size: 17px; }
-    .hero { padding: 72px 0 48px; }
-    .stage { padding: 48px 12px 0; margin-top: 56px; }
-    .flow, .numbers { grid-template-columns: 1fr; }
-    .step h3 { margin-top: 24px; }
-    summary { grid-template-columns: 40px 1fr 36px; padding: 24px 0; }
-    details .ans { padding: 0 0 28px 40px; }
+    .hero { padding-top: 44px; }
+    .ctas .btn { width: 100%; }
+    .central { border-radius: 20px; margin-top: 44px; }
+    .central-plan, .central-feed { padding: 18px; }
+    .clock { font-size: 26px; }
+    .plan .room-label { font-size: 22px; }
+    .plan .room-label tspan, .plan .door-label, .plan .cam-label { display: none; }
+    .night { grid-template-columns: 1fr; }
+    .services div { grid-template-columns: 1fr; gap: 6px; }
+    .mod, .col, .road > li { padding: 24px; }
     .foot { grid-template-columns: 1fr; }
+    details p { padding-right: 0; padding-left: 40px; }
+    summary { grid-template-columns: 40px 1fr 30px; }
+    .svc-grid { grid-template-columns: 1fr; }
+    .svc.wide { grid-column: auto; }
+    .svc .media { height: 240px; }
     .curve { border-radius: 50% 50% 0 0 / 36px 36px 0 0; }
-    .hero-ctas .btn { width: 100%; justify-content: center; }
-    .event { grid-template-columns: auto 1fr; }
-    .event time { display: none; }
-    .phase { min-height: 0; }
+    .mock { width: 82%; padding: 14px; }
+    .case .media { aspect-ratio: 4 / 3; }
+    .pill-p { white-space: nowrap; }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <linearGradient id="g-glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d6e4ff"/><stop offset=".42" stop-color="#4a8aff"/><stop offset="1" stop-color="#1a3a8f"/></linearGradient>
+  <linearGradient id="g-hi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <radialGradient id="g-glow"><stop offset="0" stop-color="#4a8aff" stop-opacity=".38"/><stop offset="1" stop-color="#4a8aff" stop-opacity="0"/></radialGradient>
+  <filter id="g-shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#000" flood-opacity=".55"/></filter>
+</defs></svg>
+
 <header class="nav" id="nav">
   <div class="wrap nav-inner">
     <a href="#topo" class="logo" aria-label="Prime Seguritech, início">
-      <svg class="logo-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2Z" fill="currentColor"/>
-        <path d="M11 16.5 14.5 20 21.5 12.5" stroke="var(--bg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span>prime seguritech<sup>®</sup></span>
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2Z"/><path d="M11 16.5 14.5 20 21.5 12.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Prime Seguritech
     </a>
     <ul class="nav-links">
-      <li><a href="#sentinel">sentinel</a></li>
-      <li><a href="#como-funciona">como funciona</a></li>
-      <li><a href="#servicos">serviços</a></li>
-      <li><a href="#roadmap">roadmap</a></li>
-      <li><a href="#faq">faq</a></li>
-      <li><a href="/demo">demo</a></li>
+      <li><a href="#noite">Como funciona</a></li>
+      <li><a href="#cenarios">Cenários</a></li>
+      <li><a href="#sentinel">Sentinel</a></li>
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#perguntas">Perguntas</a></li>
     </ul>
-    <a class="btn nav-cta" href="https://wa.me/5561991404925?text=Ol%C3%A1%2C%20quero%20conhecer%20o%20Prime%20Sentinel!" target="_blank" rel="noopener">Quero ser piloto</a>
-    <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
-      <span></span><span></span><span></span>
-    </button>
+    <a class="btn" href="/demo">Testar o protótipo</a>
+    <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
   </div>
 </header>
-<nav class="mobile-menu" id="mobile-menu" aria-label="Menu">
+<nav class="menu" id="menu" aria-label="Menu">
+  <a href="#noite">Como funciona</a>
+  <a href="#cenarios">Cenários</a>
   <a href="#sentinel">Sentinel</a>
-  <a href="#como-funciona">Como funciona</a>
   <a href="#servicos">Serviços</a>
-  <a href="#roadmap">Roadmap</a>
-  <a href="#faq">FAQ</a>
-  <a href="/demo">Demo</a>
-  <a class="btn" href="https://wa.me/5561991404925?text=Ol%C3%A1%2C%20quero%20conhecer%20o%20Prime%20Sentinel!" target="_blank" rel="noopener">Quero ser piloto</a>
+  <a href="#perguntas">Perguntas</a>
+  <a class="btn" href="/demo">Testar o protótipo</a>
 </nav>
 
 <main id="topo">
 
-<!-- HERO -->
+<!-- HERO: a central ao vivo -->
 <section class="hero">
   <div class="wrap">
-    <div class="badge rv"><span class="dot"></span>Prime Sentinel · IA para monitoramento e TI · em fase piloto</div>
-    <h1 class="rv">Segurança e TI com inteligência que não dorme</h1>
-    <p class="lead rv">A Prime Seguritech está construindo o <b>Prime Sentinel</b>, uma central com IA que faz a triagem de alertas, resume ocorrências e responde chamados de TI para pequenas e médias empresas. Tudo com <b>decisão humana</b> no comando.</p>
-    <div class="hero-ctas rv">
-      <a class="btn" href="https://wa.me/5561991404925?text=Ol%C3%A1%2C%20quero%20ser%20piloto%20do%20Prime%20Sentinel!" target="_blank" rel="noopener">Quero ser empresa piloto →</a>
-      <a class="btn ghost" href="/demo">Testar o protótipo</a>
-    </div>
-
-    <div class="stage rv" aria-label="Prévia ilustrativa da central Prime Sentinel">
-      <span class="stage-caption">prévia ilustrativa · dados fictícios</span>
-      <div class="console" role="img" aria-label="Painel com fila de eventos de alarme e um resumo gerado por IA sugerindo prioridade para o operador">
-        <div class="console-bar"><i></i><i></i><i></i><span>sentinel / central de eventos</span></div>
-        <div class="console-body">
-          <div class="feed">
-            <div class="feed-title">Fila de eventos · hoje</div>
-            <div class="event active"><span class="sev r"></span><div>Disparo · Zona 3 (depósito)<small>Prioridade alta sugerida pela IA</small></div><time>02:14</time></div>
-            <div class="event"><span class="sev a"></span><div>Câmera 07 offline<small>Provável queda de energia local</small></div><time>01:52</time></div>
-            <div class="event"><span class="sev g"></span><div>Disparo · Zona 1 (recepção)<small>Padrão compatível com falso alarme</small></div><time>00:31</time></div>
-            <div class="event"><span class="sev b"></span><div>Chamado TI · impressora fiscal<small>Resolvido pelo assistente</small></div><time>23:08</time></div>
-          </div>
-          <div class="panel">
-            <div class="panel-title">Resumo para o operador</div>
-            <div class="ai-box">
-              <div class="ai-head">análise do sentinel</div>
-              <p class="typing">Disparo no depósito fora do horário de funcionamento. Dois sensores seguidos em 40 s e porta lateral aberta. Não há histórico de falso alarme nesta zona nos últimos 30 dias. Sugestão: verificar câmera 04 e ligar para o responsável.</p>
-            </div>
-            <div class="chips">
-              <span class="chip hot">fora do horário</span>
-              <span class="chip hot">2 sensores</span>
-              <span class="chip">câmera 04</span>
-              <span class="chip">contato: responsável</span>
-            </div>
-            <div class="actions"><span class="primary">Ver câmera 04</span><span>Ligar p/ cliente</span></div>
-            <div class="human-note">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-              Acionar autoridades é sempre decisão do operador.
-            </div>
-          </div>
+    <div class="hero-top">
+      <h1>Cada disparo chega à central já explicado.</h1>
+      <div class="hero-side">
+        <p class="lead">O Prime Sentinel lê sensores, câmeras e o histórico do cliente com o Claude, da Anthropic, e entrega ao operador a prioridade, o resumo e o próximo passo. Quem decide continua sendo uma pessoa.</p>
+        <div class="ctas">
+          <a class="btn" href="/demo">Testar o protótipo</a>
+          <a class="btn line" href="https://wa.me/5561991404925?text=Ol%C3%A1%2C%20quero%20ser%20empresa%20piloto%20do%20Prime%20Sentinel" target="_blank" rel="noopener">Quero ser empresa piloto</a>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- NUMBERS (dark, curved) -->
-<section class="dark curve">
-  <div class="wrap sec">
-    <div class="sec-head">
-      <span class="eyebrow rv">O problema</span>
-      <div>
-        <h2 class="rv">Alarme demais.<br>Contexto de menos.</h2>
-        <p class="lead rv">Pequenas centrais de monitoramento e equipes de TI recebem alertas, chamados e logs o dia inteiro. <b>A maior parte é ruído</b>, mas cada um precisa ser lido. O Sentinel lê primeiro, organiza e entrega ao operador só o que importa, já com o contexto.</p>
+    <div class="central on-night" id="central" role="img" aria-label="Animação: planta de uma loja de madrugada. Dois sensores do depósito disparam, a porta lateral abre, a câmera 4 é destacada e o Sentinel escreve a triagem com prioridade alta para o operador.">
+      <div class="central-plan">
+        <div class="central-head">
+          <p><strong>Loja de materiais</strong>, fechada desde 18h</p>
+          <span class="clock num" id="clock">02:13:58</span>
+        </div>
+        <svg class="plan" viewBox="0 0 600 380" aria-hidden="true">
+          <rect class="room" x="10" y="10" width="350" height="230" rx="4"/>
+          <rect class="room" x="10" y="240" width="200" height="130" rx="4"/>
+          <rect class="room" x="210" y="240" width="150" height="130" rx="4"/>
+          <rect class="room" id="z3" x="360" y="10" width="230" height="360" rx="4"/>
+          <path class="wall" d="M10 10 H590 V250 M590 300 V370 H140 M80 370 H10 V10 M360 10 V160 M360 200 V370 M10 240 H160 M200 240 H360 M210 240 V290 M210 330 V370"/>
+          <line class="door" x1="80" y1="370" x2="140" y2="370"/>
+          <line class="door" id="door-side" x1="590" y1="250" x2="590" y2="300"/>
+          <text class="room-label" x="30" y="40">Salão de vendas <tspan>zona 2</tspan></text>
+          <text class="room-label" x="30" y="268">Caixa e recepção <tspan>zona 1</tspan></text>
+          <text class="room-label" x="230" y="268">Escritório <tspan>zona 4</tspan></text>
+          <text class="room-label" x="380" y="40">Depósito <tspan>zona 3</tspan></text>
+          <text class="door-label" x="88" y="360">entrada</text>
+          <text class="door-label" id="door-side-label" x="505" y="280">porta lateral</text>
+          <polygon class="cone" id="cone" points="570,30 380,250 520,365"/>
+          <rect class="cam" id="cam4" x="562" y="22" width="16" height="12" rx="3"/>
+          <text class="cam-label" id="cam4-label" x="496" y="32">câmera 4</text>
+          <circle class="sensor" cx="180" cy="130" r="6"/>
+          <circle class="sensor" cx="110" cy="310" r="6"/>
+          <circle class="sensor" cx="285" cy="315" r="6"/>
+          <circle class="ring" id="s3a-ring" cx="430" cy="120" r="6"/>
+          <circle class="sensor" id="s3a" cx="430" cy="120" r="6"/>
+          <circle class="ring" id="s3b-ring" cx="480" cy="250" r="6"/>
+          <circle class="sensor" id="s3b" cx="480" cy="250" r="6"/>
+        </svg>
+        <div class="legend"><span><i style="background:#3a4266"></i>sensor em repouso</span><span><i style="background:var(--alarm)"></i>sensor disparado</span><span><i style="background:var(--signal)"></i>câmera sugerida</span></div>
+      </div>
+      <div class="central-feed">
+        <p class="feed-title">Eventos recebidos</p>
+        <ol class="events num" id="events"></ol>
+        <div class="triage" id="triage">
+          <div class="triage-top"><span class="who">Sentinel sugere</span><span class="prio">Prioridade alta</span></div>
+          <p id="triage-text"></p>
+          <div class="triage-actions"><span class="first">Ver câmera 4</span><span>Ligar para o gerente</span></div>
+          <p class="triage-note">Acionar a polícia é decisão do operador.</p>
+        </div>
+        <button class="replay" id="replay" type="button" hidden>Ver de novo</button>
       </div>
     </div>
-    <div class="numbers">
-      <div class="num rv"><strong>24<em>h</em></strong><p>de monitoramento, 7 dias por semana, já em operação</p></div>
-      <div class="num rv"><strong>2</strong><p>frentes atendidas: segurança eletrônica e suporte de TI</p></div>
-      <div class="num rv"><strong>3</strong><p>módulos de IA em construção no Sentinel</p></div>
-      <div class="num rv"><strong>1</strong><p>regra inegociável: decisão final sempre humana</p></div>
+    <p class="disclaimer">Simulação com dados fictícios. A análise real roda na <a href="/demo">página do protótipo</a>.</p>
+  </div>
+</section>
+
+<!-- RESULTADOS -->
+<section class="on-night curve" style="margin-top:120px">
+  <div class="wrap sec">
+    <div class="sec-head">
+      <span class="label">Resultados</span>
+      <div>
+        <h2>Testado com a API real do Claude.</h2>
+        <p class="lead">Rodamos o protótipo em quatro cenários de referência, do falso alarme ao botão de pânico.</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div><strong class="num">4<span>/4</span></strong><p>cenários classificados na faixa de prioridade esperada</p></div>
+      <div><strong class="num">4–8<span>s</span></strong><p>do evento à triagem pronta na tela do operador</p></div>
+      <div><strong class="num">0</strong><p>ações tomadas pela IA sem o operador</p></div>
+    </div>
+    <p class="stats-note">Teste interno de outubro de 2026, com dados fictícios. Os cenários estão logo abaixo.</p>
+  </div>
+</section>
+
+<!-- CENÁRIOS (grade de cases) -->
+<section id="cenarios">
+  <div class="wrap sec">
+    <div class="sec-head">
+      <span class="label">Cenários</span>
+      <div>
+        <h2>Quatro noites difíceis.<br>Uma triagem para cada.</h2>
+        <p class="lead">Cada cenário abre o protótipo já preenchido. A resposta que aparece lá é gerada na hora pelo Claude.</p>
+      </div>
+    </div>
+    <div class="cases">
+      <a class="case" href="/demo?c=deposito">
+        <div class="media"><div class="mock" aria-hidden="true">
+          <div class="mock-top"><span>Sentinel sugere</span><span class="pill-p alta">alta</span></div>
+          <p>Dois disparos no depósito às 02h14, loja fechada, porta lateral aberta. Verifique a câmera 4.</p>
+          <div class="bars"><i></i><i></i><i></i></div>
+        </div></div>
+        <div class="pills"><span>Intrusão</span><span>2 sensores</span><span>Câmera</span></div>
+        <h3>Loja de materiais</h3>
+        <p class="sub">Disparo no depósito de madrugada.</p>
+        <span class="go">Testar este cenário</span>
+      </a>
+      <a class="case" href="/demo?c=recepcao">
+        <div class="media"><div class="mock" aria-hidden="true">
+          <div class="mock-top"><span>Sentinel sugere</span><span class="pill-p media">média</span></div>
+          <p>Disparo único na recepção às 00h31, logo depois do ar-condicionado ligar. Padrão de falso alarme.</p>
+          <div class="bars"><i></i><i></i><i></i></div>
+        </div></div>
+        <div class="pills"><span>Falso alarme</span><span>Histórico</span><span>Chamado técnico</span></div>
+        <h3>Clínica odontológica</h3>
+        <p class="sub">Sétimo disparo no mesmo horário em 30 dias.</p>
+        <span class="go">Testar este cenário</span>
+      </a>
+      <a class="case" href="/demo?c=energia">
+        <div class="media"><div class="mock" aria-hidden="true">
+          <div class="mock-top"><span>Sentinel sugere</span><span class="pill-p media">média</span></div>
+          <p>Câmera 7 sem sinal dois minutos depois da falta de energia. Central na bateria, nenhum sensor disparou.</p>
+          <div class="bars"><i></i><i></i><i></i></div>
+        </div></div>
+        <div class="pills"><span>Falha técnica</span><span>Energia</span><span>Bateria</span></div>
+        <h3>Escritório de contabilidade</h3>
+        <p class="sub">Câmera offline durante queda de energia.</p>
+        <span class="go">Testar este cenário</span>
+      </a>
+      <a class="case" href="/demo?c=panico">
+        <div class="media"><div class="mock" aria-hidden="true">
+          <div class="mock-top"><span>Sentinel sugere</span><span class="pill-p critica">crítica</span></div>
+          <p>Botão de pânico no caixa às 21h47, loja aberta e ligação não atendida. Tratar como risco a pessoas.</p>
+          <div class="bars"><i></i><i></i><i></i></div>
+        </div></div>
+        <div class="pills"><span>Pânico</span><span>Loja aberta</span><span>Risco a pessoas</span></div>
+        <h3>Farmácia</h3>
+        <p class="sub">Botão de pânico acionado no caixa.</p>
+        <span class="go">Testar este cenário</span>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- SENTINEL FEATURES -->
+<!-- UMA NOITE NA CENTRAL -->
+<section id="noite" class="on-night">
+  <div class="wrap sec">
+    <div class="sec-head">
+      <span class="label">Como funciona</span>
+      <div>
+        <h2>Uma noite na central.</h2>
+      <p class="lead">A maior parte do que chega de madrugada é falha técnica ou falso alarme. O Sentinel separa o ruído do que é urgente, para o operador gastar atenção onde importa. Exemplo com dados fictícios:</p>
+      </div>
+    </div>
+    <ol class="night">
+      <li>
+        <span class="t num">22:41</span>
+        <span class="rail" aria-hidden="true"></span>
+        <dl>
+          <dt>Chegou</dt><dd>Câmera 7 de um escritório perde o sinal.</dd>
+          <dt>Sentinel</dt><dd class="ia">Queda de energia no bairro, central na bateria. <span class="tag-p baixa">baixa</span></dd>
+          <dt>Operador</dt><dd>Acompanha a bateria até a energia voltar.</dd>
+        </dl>
+      </li>
+      <li>
+        <span class="t num">00:31</span>
+        <span class="rail" aria-hidden="true"></span>
+        <dl>
+          <dt>Chegou</dt><dd>Disparo único na recepção de uma clínica.</dd>
+          <dt>Sentinel</dt><dd class="ia">Sétimo disparo no mesmo horário em 30 dias, logo depois que o ar-condicionado liga. <span class="tag-p media">média</span></dd>
+          <dt>Operador</dt><dd>Registra e abre chamado para reposicionar o sensor.</dd>
+        </dl>
+      </li>
+      <li>
+        <span class="t num">02:14</span>
+        <span class="rail" aria-hidden="true"></span>
+        <dl>
+          <dt>Chegou</dt><dd>Dois disparos no depósito e porta lateral aberta.</dd>
+          <dt>Sentinel</dt><dd class="ia">Fora do horário, sem histórico de falso alarme na zona. <span class="tag-p alta">alta</span></dd>
+          <dt>Operador</dt><dd>Confere a câmera 4, liga para o gerente e aciona a polícia.</dd>
+        </dl>
+      </li>
+      <li>
+        <span class="t num">06:05</span>
+        <span class="rail" aria-hidden="true"></span>
+        <dl>
+          <dt>Chegou</dt><dd>Padaria avisa pelo WhatsApp que a impressora fiscal não imprime.</dd>
+          <dt>Sentinel</dt><dd class="ia">Guia o cliente: era falta de papel. Resolvido sem técnico.</dd>
+          <dt>Operador</dt><dd>Nada a fazer. O chamado fica registrado.</dd>
+        </dl>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- MÓDULOS -->
 <section id="sentinel">
   <div class="wrap sec">
     <div class="sec-head">
-      <span class="eyebrow rv">Prime Sentinel</span>
+      <span class="label">Sentinel</span>
       <div>
-        <h2 class="rv">Uma central que pensa<br>antes de alarmar.</h2>
-        <p class="lead rv">Três módulos construídos sobre o <b>Claude</b>, o modelo de IA da Anthropic, e ligados ao monitoramento e ao suporte que a Prime já oferece.</p>
+        <h2>Três frentes, a mesma central.</h2>
+      <p class="lead">O Sentinel é construído sobre o monitoramento e o suporte de TI que a Prime já presta todos os dias.</p>
       </div>
     </div>
-    <div class="feature-grid">
-      <article class="feature rv">
-        <div class="media">
-          <div class="mini" aria-hidden="true">
-            <div class="mini-row"><span class="sev r"></span><b>Zona 3</b><div class="bar"><i style="width:92%"></i></div><span>alta</span></div>
-            <div class="mini-row"><span class="sev a"></span><b>Câm. 07</b><div class="bar"><i style="width:54%"></i></div><span>média</span></div>
-            <div class="mini-row"><span class="sev g"></span><b>Zona 1</b><div class="bar"><i style="width:14%"></i></div><span>baixa</span></div>
-            <div class="mini-row"><span class="sev g"></span><b>Zona 5</b><div class="bar"><i style="width:9%"></i></div><span>baixa</span></div>
-          </div>
-        </div>
+    <div class="bento">
+      <article class="mod big on-night">
         <h3>Triagem de alertas</h3>
-        <p class="muted">Cruza horário, zona, sequência de sensores e histórico do cliente para sugerir prioridade e escrever um resumo de cada evento em linguagem simples.</p>
-        <div class="tags"><span class="tag">Monitoramento 24h</span><span class="tag">Claude API</span><span class="tag">Tempo real</span></div>
-      </article>
-      <article class="feature rv">
-        <div class="media">
-          <div class="mini" aria-hidden="true">
-            <div class="bubble in">O computador do caixa travou e não imprime nota 😩</div>
-            <div class="bubble out">Vamos resolver juntos. A impressora aparece com luz laranja piscando?</div>
-            <div class="bubble in">Sim!</div>
-            <div class="bubble out">Falta de papel ou tampa aberta. Se não resolver em 2 min, abro chamado com o técnico.</div>
-          </div>
+        <p>Cruza horário, zona, sequência de sensores e histórico do cliente. Sugere a prioridade e escreve um resumo que se lê em dez segundos.</p>
+        <div class="art queue" aria-hidden="true">
+          <div><i style="background:var(--alarm)"></i><span><b>Depósito, zona 3</b><small>2 sensores e porta aberta</small></span><em style="background:rgba(255,68,68,.15);color:#ffb4b4">alta</em></div>
+          <div><i style="background:var(--amber)"></i><span><b>Recepção, zona 1</b><small>padrão de falso alarme</small></span><em style="background:rgba(255,176,32,.15);color:#ffd27a">média</em></div>
+          <div><i style="background:var(--ok)"></i><span><b>Câmera 7</b><small>queda de energia no bairro</small></span><em style="background:rgba(47,213,114,.14);color:#8ff0b6">baixa</em></div>
         </div>
-        <h3>Assistente de TI no WhatsApp</h3>
-        <p class="muted">Faz o primeiro atendimento dos chamados, guia o cliente em soluções simples e encaminha para o técnico, com o diagnóstico pronto, o que não resolver.</p>
-        <div class="tags"><span class="tag">Suporte TI</span><span class="tag">WhatsApp</span><span class="tag">Escala humana</span></div>
       </article>
-      <article class="feature rv">
-        <div class="media">
-          <div class="doc" aria-hidden="true">
-            <h4>Relatório mensal · Cliente exemplo</h4>
-            <div class="kpis"><div>41<small>eventos</small></div><div>3<small>reais</small></div><div>12<small>chamados</small></div></div>
-            <div class="ln"></div><div class="ln m"></div><div class="ln s"></div>
-            <div class="ln"></div><div class="ln m"></div>
-          </div>
+      <article class="mod">
+        <h3>Suporte de TI no WhatsApp</h3>
+        <p>Faz o primeiro atendimento, resolve o simples e passa o resto ao técnico com o diagnóstico pronto.</p>
+        <div class="art chat" aria-hidden="true">
+          <span class="c">A impressora do caixa parou de imprimir nota.</span>
+          <span class="s">A luz laranja está piscando? Se estiver, é falta de papel ou tampa aberta.</span>
         </div>
-        <h3>Relatórios e LGPD</h3>
-        <p class="muted">Transforma o histórico de eventos e chamados em um relatório mensal claro, com recomendações e um checklist de adequação à LGPD para o cliente.</p>
-        <div class="tags"><span class="tag">Relatórios</span><span class="tag">LGPD</span><span class="tag">Consultoria</span></div>
+      </article>
+      <article class="mod">
+        <h3>Relatório mensal e LGPD</h3>
+        <p>Transforma eventos e chamados em um relatório claro para o cliente, com recomendações e checklist de LGPD.</p>
+        <div class="art report num" aria-hidden="true">
+          <div><strong>41</strong><small>eventos</small></div>
+          <div><strong>3</strong><small>reais</small></div>
+          <div><strong>12</strong><small>chamados</small></div>
+        </div>
       </article>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section id="como-funciona" style="background:var(--soft)">
+<!-- DECISÃO HUMANA -->
+<section class="on-night">
   <div class="wrap sec">
     <div class="sec-head">
-      <span class="eyebrow rv">Como funciona</span>
+      <span class="label">Princípios</span>
       <div>
-        <h2 class="rv">Do disparo à decisão,<br>em quatro passos.</h2>
-        <p class="lead rv">A IA cuida da leitura e da organização. <b>As pessoas decidem.</b></p>
+        <h2>A IA sugere. O operador decide.</h2>
+      <p class="lead">Segurança não aceita resposta inventada. O Sentinel usa o Claude pela API oficial da Anthropic, com limites claros sobre o que a IA pode fazer.</p>
       </div>
     </div>
-    <div class="flow">
-      <div class="step rv"><span class="n">01</span><h3>O evento chega</h3><p class="muted">Alarme, câmera, sensor ou mensagem de cliente entram na central.</p></div>
-      <div class="step rv"><span class="n">02</span><h3>O Claude analisa</h3><p class="muted">O modelo lê o evento junto com o contexto (horário, zona, histórico) e sugere prioridade e próximos passos.</p></div>
-      <div class="step human rv"><span class="n">03</span><h3>O operador decide</h3><p class="muted">Com o resumo na tela, o operador confirma, liga para o cliente ou aciona as autoridades.</p></div>
-      <div class="step rv"><span class="n">04</span><h3>Tudo vira registro</h3><p class="muted">Cada ocorrência fica documentada e entra no relatório mensal do cliente.</p></div>
+    <div class="split">
+      <div class="col ia">
+        <h3>O que o Sentinel faz</h3>
+        <ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--signal)" stroke-width="2.4" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Lê o evento junto com o contexto do cliente</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--signal)" stroke-width="2.4" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Sugere prioridade e próximos passos</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--signal)" stroke-width="2.4" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Diz quando falta informação, em vez de adivinhar</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--signal)" stroke-width="2.4" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Escreve o registro de cada ocorrência</li>
+        </ul>
+      </div>
+      <div class="col hu">
+        <h3>O que só uma pessoa faz</h3>
+        <ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>Acionar a polícia ou outras autoridades</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>Liberar acesso ou desarmar o alarme</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>Mexer em equipamento do cliente</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>Fechar uma ocorrência como resolvida</li>
+        </ul>
+      </div>
+    </div>
+    <div class="why">
+      <div><h3>Contexto longo</h3><p>Histórico do cliente, manuais dos equipamentos e registros de eventos cabem na mesma análise.</p></div>
+      <div><h3>Resposta estruturada</h3><p>A triagem sai sempre no mesmo formato, pronta para a tela do operador e para o relatório.</p></div>
+      <div><h3>Português natural</h3><p>Resumos e conversas no WhatsApp em linguagem simples, sem jargão.</p></div>
     </div>
   </div>
 </section>
 
-<!-- WHY CLAUDE (dark) -->
-<section class="dark">
-  <div class="wrap sec split">
-    <span class="eyebrow rv">Por que Claude</span>
-    <div>
-      <h2 class="rv" style="max-width:820px">Escolhemos um modelo feito para lidar com contexto e com responsabilidade.</h2>
-      <p class="lead rv" style="margin-top:28px;max-width:640px">Segurança não aceita resposta inventada. Por isso o Sentinel usa o <b>Claude, da Anthropic</b>, pela API, com regras claras sobre o que a IA pode e não pode fazer.</p>
-      <div class="why-list" style="margin-top:80px">
-        <div class="why-item rv"><h3>Leitura de contexto longo</h3><p>Histórico do cliente, manuais dos equipamentos e registros de eventos cabem na mesma análise.</p></div>
-        <div class="why-item rv"><h3>Uso de ferramentas</h3><p>O modelo consulta o histórico, abre chamados e monta relatórios por meio de ferramentas que nós controlamos.</p></div>
-        <div class="why-item rv"><h3>Português natural</h3><p>Os resumos e as conversas no WhatsApp soam como gente, não como robô de URA.</p></div>
-        <div class="why-item rv"><h3>Limites explícitos</h3><p>A IA sugere e escreve. Acionar polícia, liberar acesso e mexer em equipamento ficam sempre com uma pessoa.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SERVICES -->
-<section id="servicos">
+<!-- SERVIÇOS -->
+<section id="servicos" class="paper">
   <div class="wrap sec">
     <div class="sec-head">
-      <span class="eyebrow rv">Serviços em operação</span>
+      <span class="label">Serviços</span>
       <div>
-        <h2 class="rv">A base do Sentinel<br>já roda todos os dias.</h2>
-        <p class="lead rv">Antes da IA, vem a operação. É ela que dá ao Sentinel dados reais, clientes reais e problemas reais para resolver.</p>
+        <h2>O que a Prime já faz todos os dias.</h2>
+      <p class="lead">Os serviços continuam disponíveis com ou sem os recursos de IA.</p>
       </div>
     </div>
     <div class="svc-grid">
-      <div class="svc rv">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/></svg></div>
-        <h3>Monitoramento 24h</h3><p class="muted">Central ativa 7 dias por semana, contato imediato em disparos e pânico e acionamento das autoridades quando necessário.</p>
-      </div>
-      <div class="svc rv">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/></svg></div>
-        <h3>Câmeras e filmagens</h3><p class="muted">Busca e entrega de gravações sempre que o cliente pede, além de testes periódicos dos equipamentos.</p>
-      </div>
-      <div class="svc rv">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4 2.6-2.6Z"/></svg></div>
-        <h3>Manutenção</h3><p class="muted">Manutenção corretiva e preventiva com equipe técnica própria: limpeza, remoção de vírus e upgrades de memória e SSD.</p>
-      </div>
-      <div class="svc rv">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
-        <h3>Suporte de TI</h3><p class="muted">Atendimento remoto e presencial pelo WhatsApp, telefone ou TeamViewer.</p>
-      </div>
-      <div class="svc rv">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.9-9.9A6 6 0 0 1 17.7 9 4.5 4.5 0 0 1 17 18H7Z"/></svg></div>
-        <h3>Backup em nuvem</h3><p class="muted">Backup e recuperação de dados com Google Drive, OneDrive ou soluções locais.</p>
-      </div>
-      <div class="svc rv">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
-        <h3>Segurança da informação</h3><p class="muted">Firewall, antivírus, controle de acesso, consultoria de TI e adequação à LGPD.</p>
-      </div>
+      <article class="svc"><div class="media"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="104" r="92" fill="url(#g-glow)"/><g transform="rotate(-8 100 100)" filter="url(#g-shadow)"><path d="M100 30 155 52v48c0 35-24 62-55 72-31-10-55-37-55-72V52Z" fill="url(#g-glass)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/><path d="M100 40 147 58v20c-30-10-66-8-94 6V58Z" fill="url(#g-hi)" opacity=".55"/><path d="m78 102 15 15 30-32" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/></g></svg></div><h3>Monitoramento 24h</h3><p>Central ativa 7 dias por semana, com contato imediato em disparos e pânico.</p></article>
+      <article class="svc wide"><div class="media"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="104" r="92" fill="url(#g-glow)"/><g transform="rotate(-8 100 100)" filter="url(#g-shadow)"><rect x="38" y="72" width="104" height="52" rx="16" fill="url(#g-glass)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/><rect x="44" y="76" width="92" height="16" rx="8" fill="url(#g-hi)" opacity=".5"/><circle cx="58" cy="98" r="14" fill="#0a0c14" stroke="#8fb4ff" stroke-width="3"/><circle cx="54" cy="94" r="4" fill="#fff" opacity=".8"/><path d="M128 124v26h28" fill="none" stroke="url(#g-glass)" stroke-width="12" stroke-linecap="round"/></g></svg></div><h3>Câmeras e gravações</h3><p>Busca e entrega de filmagens quando o cliente pede, e testes periódicos dos equipamentos.</p></article>
+      <article class="svc"><div class="media"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="104" r="92" fill="url(#g-glow)"/><g transform="rotate(-8 100 100)" filter="url(#g-shadow)"><path d="M139 46a30 30 0 0 0-38 38l-50 50a13 13 0 0 0 18 18l50-50a30 30 0 0 0 38-38l-19 19-16-4-4-16Z" fill="url(#g-glass)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/><path d="M110 58a24 24 0 0 1 24-14l-12 12Z" fill="url(#g-hi)" opacity=".6"/></g></svg></div><h3>Manutenção</h3><p>Preventiva e corretiva, com equipe técnica própria.</p></article>
+      <article class="svc wide"><div class="media"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="104" r="92" fill="url(#g-glow)"/><g transform="rotate(-8 100 100)" filter="url(#g-shadow)"><rect x="34" y="48" width="132" height="88" rx="14" fill="url(#g-glass)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/><rect x="44" y="58" width="112" height="60" rx="8" fill="#0a0c14" opacity=".55"/><path d="M50 64h60l-40 46H50Z" fill="url(#g-hi)" opacity=".35"/><path d="M100 136v20M74 160h52" stroke="url(#g-glass)" stroke-width="10" stroke-linecap="round"/></g></svg></div><h3>Suporte de TI</h3><p>Atendimento remoto e presencial pelo WhatsApp, telefone ou TeamViewer.</p></article>
+      <article class="svc"><div class="media"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="104" r="92" fill="url(#g-glow)"/><g transform="rotate(-8 100 100)" filter="url(#g-shadow)"><path d="M62 146a32 32 0 0 1-4-64 44 44 0 0 1 84-6 34 34 0 0 1 4 70Z" fill="url(#g-glass)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/><path d="M72 84a36 36 0 0 1 64-6c-20-4-44 0-64 14Z" fill="url(#g-hi)" opacity=".6"/><path d="M100 104v28m-12-12 12 12 12-12" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/></g></svg></div><h3>Backup em nuvem</h3><p>Google Drive, OneDrive ou soluções locais.</p></article>
+      <article class="svc"><div class="media"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="104" r="92" fill="url(#g-glow)"/><g transform="rotate(-8 100 100)" filter="url(#g-shadow)"><path d="M70 88V70a30 30 0 0 1 60 0v18" fill="none" stroke="url(#g-glass)" stroke-width="14" stroke-linecap="round"/><rect x="50" y="86" width="100" height="78" rx="18" fill="url(#g-glass)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/><rect x="58" y="92" width="84" height="20" rx="10" fill="url(#g-hi)" opacity=".5"/><circle cx="100" cy="124" r="9" fill="#0a0c14" opacity=".7"/><rect x="96" y="128" width="8" height="18" rx="4" fill="#0a0c14" opacity=".7"/></g></svg></div><h3>Segurança da informação</h3><p>Firewall, antivírus, controle de acesso e adequação à LGPD.</p></article>
     </div>
-  </div>
-</section>
 
-<!-- ROADMAP -->
-<section id="roadmap" style="background:var(--soft)">
-  <div class="wrap sec">
-    <div class="sec-head">
-      <span class="eyebrow rv">Roadmap</span>
+    <div class="sec-head" style="margin-top:140px">
+      <span class="label">Roadmap</span>
       <div>
-        <h2 class="rv">Onde estamos<br>e para onde vamos.</h2>
-        <p class="lead rv">Construímos o Sentinel junto com quem já é cliente. Cada etapa só avança quando a anterior funciona na prática.</p>
+        <h2>Onde estamos e o que vem depois.</h2>
       </div>
     </div>
-    <div class="road">
-      <div class="phase now rv">
-        <span class="st"><span class="dot"></span>Agora</span>
-        <h3>Operação e piloto</h3>
+    <ol class="road">
+      <li class="now">
+        <span class="when">Agora</span>
+        <h3>Protótipo e piloto</h3>
         <ul>
           <li>Monitoramento 24h e suporte de TI em operação</li>
-          <li>Protótipo da triagem de alertas com Claude <a href="/demo" style="text-decoration:underline">aberto para teste</a></li>
-          <li>Primeiras empresas piloto</li>
+          <li>Triagem com Claude funcionando <a href="/demo">no protótipo</a></li>
+          <li>Seleção das primeiras empresas piloto</li>
         </ul>
-      </div>
-      <div class="phase rv">
-        <span class="st">Próximo</span>
-        <h3>Assistente de TI</h3>
+      </li>
+      <li>
+        <span class="when">Próximo</span>
+        <h3>Suporte de TI no WhatsApp</h3>
         <ul>
-          <li>Primeiro atendimento de chamados pelo WhatsApp</li>
-          <li>Encaminhamento ao técnico com diagnóstico pronto</li>
+          <li>Primeiro atendimento automático dos chamados</li>
+          <li>Encaminhamento ao técnico com diagnóstico</li>
           <li>Base de conhecimento por cliente</li>
         </ul>
-      </div>
-      <div class="phase rv">
-        <span class="st">Depois</span>
+      </li>
+      <li>
+        <span class="when">Depois</span>
         <h3>Sentinel como produto</h3>
         <ul>
-          <li>Relatórios mensais e checklist de LGPD automáticos</li>
+          <li>Relatórios mensais e checklist de LGPD</li>
           <li>Painel do cliente</li>
           <li>Oferta para outras centrais de monitoramento</li>
         </ul>
-      </div>
-    </div>
+      </li>
+    </ol>
   </div>
 </section>
 
-<!-- QUOTE -->
-<section class="dark quote">
-  <div class="wrap">
-    <blockquote class="rv">“Tecnologia de verdade não é a que faz mais barulho. É a que mostra o que importa a tempo de alguém agir.”</blockquote>
-    <cite class="rv">Equipe Prime Seguritech</cite>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section id="faq">
+<!-- PERGUNTAS -->
+<section id="perguntas">
   <div class="wrap sec">
     <div class="sec-head">
-      <span class="eyebrow rv">Perguntas</span>
-      <h2 class="rv">Perguntas frequentes</h2>
+      <span class="label">Perguntas</span>
+      <div>
+        <h2>Perguntas frequentes</h2>
+      </div>
     </div>
-    <div class="faq-list">
-      <details class="rv"><summary><span class="n">01</span><h3>A IA aciona a polícia sozinha?</h3><span class="pm"></span></summary>
-        <div class="ans">Não. O Sentinel sugere prioridade e escreve o resumo do evento. Acionar autoridades, liberar acesso ou mexer em equipamento é sempre decisão de um operador da Prime.</div></details>
-      <details class="rv"><summary><span class="n">02</span><h3>Qual IA vocês usam?</h3><span class="pm"></span></summary>
-        <div class="ans">O Claude, modelo da Anthropic, acessado pela API oficial. A Prime controla quais informações chegam ao modelo e quais ações ele pode sugerir.</div></details>
-      <details class="rv"><summary><span class="n">03</span><h3>E os dados e as imagens da minha empresa?</h3><span class="pm"></span></summary>
-        <div class="ans">Enviamos ao modelo só o necessário para analisar cada evento, e o tratamento segue a LGPD. Pelos termos comerciais da Anthropic, os dados enviados pela API não são usados para treinar os modelos por padrão.</div></details>
-      <details class="rv"><summary><span class="n">04</span><h3>Preciso trocar meus equipamentos?</h3><span class="pm"></span></summary>
-        <div class="ans">Antes de propor qualquer troca, avaliamos o sistema que você já tem. O Sentinel trabalha sobre os eventos que a central já recebe.</div></details>
-      <details class="rv"><summary><span class="n">05</span><h3>Como faço para ser empresa piloto?</h3><span class="pm"></span></summary>
-        <div class="ans">Chame a gente no WhatsApp. Explicamos como funciona o piloto, o que muda no seu atendimento e como acompanhar os resultados.</div></details>
-      <details class="rv"><summary><span class="n">06</span><h3>Quero só monitoramento ou só suporte de TI. Posso?</h3><span class="pm"></span></summary>
-        <div class="ans">Pode. Os serviços continuam disponíveis separadamente, com ou sem os recursos de IA.</div></details>
+    <div class="faq">
+      <details><summary><span class="n">01</span><span>A IA aciona a polícia sozinha?</span><span class="pm"></span></summary>
+        <p>Não. O Sentinel sugere a prioridade e escreve o resumo. Acionar autoridades, liberar acesso ou mexer em equipamento é sempre decisão de um operador da Prime.</p></details>
+      <details><summary><span class="n">02</span><span>Qual IA vocês usam?</span><span class="pm"></span></summary>
+        <p>O Claude, da Anthropic, pela API oficial. A Prime controla quais informações chegam ao modelo e quais ações ele pode sugerir.</p></details>
+      <details><summary><span class="n">03</span><span>E os dados e as imagens da minha empresa?</span><span class="pm"></span></summary>
+        <p>Enviamos ao modelo só o necessário para analisar cada evento, seguindo a LGPD. Pelos termos comerciais da Anthropic, os dados enviados pela API não são usados para treinar os modelos por padrão.</p></details>
+      <details><summary><span class="n">04</span><span>Preciso trocar meus equipamentos?</span><span class="pm"></span></summary>
+        <p>Antes de propor qualquer troca, avaliamos o sistema que você já tem. O Sentinel trabalha sobre os eventos que a central já recebe.</p></details>
+      <details><summary><span class="n">05</span><span>Como faço para ser empresa piloto?</span><span class="pm"></span></summary>
+        <p>Chame a gente no WhatsApp. Explicamos como funciona o piloto, o que muda no seu atendimento e como acompanhar os resultados.</p></details>
     </div>
   </div>
 </section>
 
-<!-- CTA + FOOTER -->
-<section class="dark curve">
+<!-- CTA + RODAPÉ -->
+<section class="on-night curve">
   <div class="wrap cta">
-    <h2 class="rv">Sua segurança começa a pensar aqui.</h2>
-    <p class="lead rv">Fale com a nossa equipe e veja como o Sentinel pode funcionar na sua empresa.</p>
-    <div class="hero-ctas rv">
-      <a class="btn" href="https://wa.me/5561991404925?text=Ol%C3%A1%2C%20quero%20conhecer%20o%20Prime%20Sentinel!" target="_blank" rel="noopener">Atendimento WhatsApp →</a>
+    <h2>Ainda tem dúvidas?</h2>
+    <p class="lead">Teste o protótipo com um cenário fictício ou fale com a nossa equipe pelo WhatsApp.</p>
+    <div class="ctas">
+      <a class="btn" href="/demo">Testar o protótipo</a>
+      <a class="btn line" href="https://wa.me/5561991404925?text=Ol%C3%A1%2C%20quero%20conhecer%20o%20Prime%20Sentinel" target="_blank" rel="noopener">Falar no WhatsApp</a>
     </div>
   </div>
   <footer>
     <div class="wrap">
       <div class="foot">
         <div>
-          <a href="#topo" class="logo"><span>prime seguritech<sup>®</sup></span></a>
-          <p class="muted">Segurança eletrônica, TI e inteligência artificial para pequenas e médias empresas.</p>
+          <a href="#topo" class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2Z"/></svg>Prime Seguritech</a>
+          <p class="about">Segurança eletrônica, TI e inteligência artificial para pequenas e médias empresas.</p>
         </div>
-        <div><h5>Produto</h5><ul><li><a href="#sentinel">Prime Sentinel</a></li><li><a href="/demo">Demo</a></li><li><a href="#como-funciona">Como funciona</a></li><li><a href="#roadmap">Roadmap</a></li></ul></div>
-        <div><h5>Empresa</h5><ul><li><a href="#servicos">Serviços</a></li><li><a href="#faq">FAQ</a></li></ul></div>
-        <div><h5>Contato</h5><ul><li><a href="https://wa.me/5561991404925" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="tel:+5561991404925">+55 61 99140-4925</a></li></ul></div>
+        <div><h4>Produto</h4><ul><li><a href="#noite">Como funciona</a></li><li><a href="#sentinel">Sentinel</a></li><li><a href="/demo">Protótipo</a></li></ul></div>
+        <div><h4>Empresa</h4><ul><li><a href="#servicos">Serviços</a></li><li><a href="#perguntas">Perguntas</a></li></ul></div>
+        <div><h4>Contato</h4><ul><li><a href="https://wa.me/5561991404925" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="tel:+5561991404925">(61) 99140-4925</a></li></ul></div>
       </div>
-      <div class="legal">
-        <span>© 2026 Prime Seguritech. Todos os direitos reservados.</span>
-        <span>Claude é uma marca da Anthropic.</span>
-      </div>
+      <div class="legal"><span>© 2026 Prime Seguritech</span><span>Claude é uma marca da Anthropic.</span></div>
     </div>
   </footer>
 </section>
 
 </main>
 
-<a class="wa" href="https://wa.me/5561991404925?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20a%20Prime%20Seguritech!" target="_blank" rel="noopener" aria-label="Conversar no WhatsApp">
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4ZM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 12 2.2a9.8 9.8 0 0 1 0 19.6Zm0-21.6A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.7A11.8 11.8 0 1 0 12 .2Z"/></svg>
+<a class="wa" href="https://wa.me/5561991404925?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20a%20Prime%20Seguritech" target="_blank" rel="noopener" aria-label="Conversar no WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.600-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4ZM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 12 2.2a9.8 9.8 0 0 1 0 19.6Zm0-21.6A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.7A11.8 11.8 0 1 0 12 .2Z"/></svg>
 </a>
 
 <script>
   // menu mobile
-  const hb = document.getElementById('hamburger');
-  const mm = document.getElementById('mobile-menu');
-  hb.addEventListener('click', () => {
-    const open = hb.classList.toggle('open');
-    mm.classList.toggle('open', open);
-    hb.setAttribute('aria-expanded', open);
-    document.body.style.overflow = open ? 'hidden' : '';
+  const burger = document.getElementById("burger"), menu = document.getElementById("menu");
+  const fecharMenu = () => { burger.setAttribute("aria-expanded", "false"); menu.classList.remove("open"); document.body.style.overflow = ""; };
+  burger.addEventListener("click", () => {
+    const abrir = burger.getAttribute("aria-expanded") !== "true";
+    burger.setAttribute("aria-expanded", String(abrir));
+    menu.classList.toggle("open", abrir);
+    document.body.style.overflow = abrir ? "hidden" : "";
   });
-  mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    hb.classList.remove('open'); mm.classList.remove('open');
-    hb.setAttribute('aria-expanded', false); document.body.style.overflow = '';
-  }));
+  menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", fecharMenu));
 
-  // revelar ao rolar
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+  // borda da nav ao rolar
+  const nav = document.getElementById("nav");
+  addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 8), { passive: true });
 
-  // nav escura sobre seções escuras
-  const nav = document.getElementById('nav');
-  const darks = [...document.querySelectorAll('section.dark')];
-  const onScroll = () => {
-    const y = 40;
-    nav.classList.toggle('on-dark', darks.some(s => { const r = s.getBoundingClientRect(); return r.top <= y && r.bottom > y; }));
-  };
-  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  // a central ao vivo: a única animação da página
+  const central = document.getElementById("central");
+  const relogio = document.getElementById("clock");
+  const lista = document.getElementById("events");
+  const triagem = document.getElementById("triage");
+  const texto = document.getElementById("triage-text");
+  const repetir = document.getElementById("replay");
+  const RESUMO = "Dois disparos seguidos no depósito às 02h14, com a loja fechada e a porta lateral aberta. A zona não teve falso alarme nos últimos 30 dias. Verifique a câmera 4 e ligue para o gerente.";
+  const PASSOS = [
+    { t: 900,  cls: "s1", hora: "02:14", txt: "Sensor de presença, depósito", hot: true },
+    { t: 2300, cls: "s2", hora: "02:14", txt: "Novo disparo, depósito", hot: true },
+    { t: 3400, cls: "s3", hora: "02:14", txt: "Porta lateral aberta", hot: true },
+    { t: 4400, cls: "s4" },
+  ];
+  const FIM = 62; // segundos simulados no relógio
+  const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let timers = [], relogioTimer;
+
+  function hora(seg) {
+    const base = 2 * 3600 + 13 * 60 + 58 + seg;
+    return [Math.floor(base / 3600), Math.floor(base / 60) % 60, base % 60].map((n) => String(n).padStart(2, "0")).join(":");
+  }
+  function addEvento(p) {
+    const li = document.createElement("li");
+    if (p.hot) li.className = "hot";
+    li.innerHTML = `<time>${p.hora}</time><span>${p.txt}</span>`;
+    lista.appendChild(li);
+  }
+  function reset() {
+    timers.forEach(clearTimeout); clearInterval(relogioTimer); timers = [];
+    central.classList.remove("s1", "s2", "s3", "s4");
+    lista.innerHTML = ""; texto.textContent = ""; texto.classList.remove("caret");
+    triagem.classList.remove("show"); repetir.hidden = true; relogio.textContent = hora(0);
+  }
+  function estadoFinal() {
+    reset();
+    PASSOS.forEach((p) => { central.classList.add(p.cls); if (p.hora) addEvento(p); });
+    relogio.textContent = hora(FIM); triagem.classList.add("show"); texto.textContent = RESUMO;
+  }
+  function rodar() {
+    reset();
+    let seg = 0;
+    relogioTimer = setInterval(() => { seg = Math.min(seg + 1, FIM); relogio.textContent = hora(seg); }, 80);
+    PASSOS.forEach((p) => timers.push(setTimeout(() => { central.classList.add(p.cls); if (p.hora) addEvento(p); }, p.t)));
+    timers.push(setTimeout(() => {
+      clearInterval(relogioTimer); relogio.textContent = hora(FIM);
+      triagem.classList.add("show"); texto.classList.add("caret");
+      let i = 0;
+      const escrever = () => {
+        texto.textContent = RESUMO.slice(0, ++i);
+        if (i < RESUMO.length) timers.push(setTimeout(escrever, 16));
+        else { texto.classList.remove("caret"); repetir.hidden = false; }
+      };
+      escrever();
+    }, 5200));
+  }
+  repetir.addEventListener("click", rodar);
+
+  if (reduzido) estadoFinal();
+  else {
+    // começa quando a central aparece na tela
+    const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) { rodar(); io.disconnect(); } }, { threshold: 0.35 });
+    io.observe(central);
+  }
 </script>
 </body>
 </html>

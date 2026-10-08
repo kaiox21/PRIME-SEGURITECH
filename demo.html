@@ -137,7 +137,8 @@
       $("#cenarios").innerHTML = Object.entries(cenarios)
         .map(([id, c]) => `<button type="button" class="cen" data-id="${esc(id)}" aria-pressed="false">${esc(c.titulo)}</button>`).join("");
       document.querySelectorAll(".cen").forEach((b) => b.addEventListener("click", () => escolher(b.dataset.id)));
-      escolher(Object.keys(cenarios)[0]);
+      const pedido = new URLSearchParams(location.search).get("c");
+      escolher(pedido in cenarios ? pedido : Object.keys(cenarios)[0]);
     } catch {
       area.value = "{}";
     }
