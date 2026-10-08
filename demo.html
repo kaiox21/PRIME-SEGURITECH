@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prime Sentinel | Demo da triagem com IA</title>
+<meta name="description" content="Teste o protótipo do Prime Sentinel: escolha um evento fictício de alarme e veja a triagem sugerida pelo Claude para o operador.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --ink: #000; --ink-2: #4f4f4f; --ink-3: #8a8a8a; --line: #e0e0e0; --soft: #f5f5f5;
+    --dark: #000; --dark-2: #0f0f0f; --dark-3: #1a1a1a; --on-dark: #fff; --on-dark-2: #a3a3a3;
+    --red: #ff3b30; --amber: #ffb020; --green: #2fd572; --blue-soft: #8fb0ff;
+    --gutter: 72px;
+    --sans: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 18px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 0 var(--gutter); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 80px; }
+  .logo { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: var(--bg); border: 1px solid var(--ink); border-radius: 999px; padding: 11px 24px; font: inherit; font-size: 16px; cursor: pointer; transition: opacity .2s, transform .2s; }
+  .btn:hover:not(:disabled) { opacity: .85; transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: progress; }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  h1 { font-size: clamp(40px, 5vw, 72px); font-weight: 400; line-height: 1.06; letter-spacing: -0.025em; }
+  .lead { font-size: clamp(18px, 1.5vw, 21px); font-weight: 300; color: var(--ink-2); max-width: 680px; margin-top: 24px; }
+  .head { padding: 72px 0 56px; display: grid; grid-template-columns: 284px 1fr; }
+  .head .eyebrow { padding-top: 14px; }
+
+  .lab { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; padding-bottom: 120px; }
+  .card { border-radius: 16px; padding: 28px; }
+  .input { background: var(--soft); }
+  .output { background: var(--dark-2); color: var(--on-dark); min-height: 560px; display: flex; flex-direction: column; }
+  .label { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; display: block; }
+  .output .label { color: var(--on-dark-2); }
+  .cenarios { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .cen { font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 14px; cursor: pointer; color: var(--ink-2); }
+  .cen[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  textarea { width: 100%; min-height: 380px; resize: vertical; border: 1px solid var(--line); border-radius: 12px; padding: 16px; font-family: var(--mono); font-size: 13px; line-height: 1.6; background: var(--bg); color: var(--ink); }
+  textarea:focus { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .row { display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-top: 16px; flex-wrap: wrap; }
+  .hint { font-size: 13px; color: var(--ink-3); }
+
+  .vazio { margin: auto; text-align: center; color: var(--on-dark-2); font-weight: 300; max-width: 340px; }
+  .pri { display: inline-flex; align-items: center; gap: 10px; font-size: 40px; font-weight: 300; letter-spacing: -0.03em; text-transform: capitalize; }
+  .pri i { width: 14px; height: 14px; border-radius: 50%; }
+  .p-critica i { background: var(--red); box-shadow: 0 0 0 6px rgba(255,59,48,.2); }
+  .p-alta i { background: var(--red); }
+  .p-media i { background: var(--amber); }
+  .p-baixa i { background: var(--green); }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .chip { font-family: var(--mono); font-size: 11px; border: 1px solid #333; color: var(--on-dark-2); padding: 4px 10px; border-radius: 999px; }
+  .chip.hot { border-color: rgba(255,59,48,.55); color: #ff8a83; }
+  .resumo { background: var(--dark-3); border-radius: 12px; padding: 18px; margin-top: 22px; line-height: 1.6; font-size: 16px; }
+  .sec { margin-top: 22px; }
+  .sec ol, .sec ul { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: #ddd; font-weight: 300; }
+  .humano { margin-top: auto; padding-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; border-top: 1px solid #262626; }
+  .humano p { font-size: 13px; color: var(--on-dark-2); flex: 1; min-width: 200px; }
+  .dark-btn { background: var(--on-dark); color: var(--dark); border-color: var(--on-dark); }
+  .dark-btn.ghost { background: transparent; color: var(--on-dark); border-color: #444; }
+  .erro { margin: auto; text-align: center; color: #ff8a83; max-width: 380px; }
+  .carregando { margin: auto; display: flex; align-items: center; gap: 12px; color: var(--on-dark-2); font-family: var(--mono); font-size: 13px; }
+  .spin { width: 16px; height: 16px; border: 2px solid #333; border-top-color: var(--on-dark); border-radius: 50%; animation: s 0.9s linear infinite; }
+  @keyframes s { to { transform: rotate(360deg); } }
+  .rodape { font-size: 12px; color: var(--on-dark-2); margin-top: 14px; font-family: var(--mono); }
+  @media (prefers-reduced-motion: reduce) { .spin { animation-duration: 3s; } }
+  @media (max-width: 1100px) { :root { --gutter: 40px; } .head { grid-template-columns: 1fr; } .head .eyebrow { margin-bottom: 18px; padding-top: 0; } }
+  @media (max-width: 900px) { .lab { grid-template-columns: 1fr; } .output { min-height: 420px; } }
+  @media (max-width: 560px) { :root { --gutter: 16px; } .card { padding: 18px; } textarea { min-height: 300px; } .nav .btn { padding: 9px 16px; font-size: 14px; } }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="logo" aria-label="Prime Seguritech, início">
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2Z" fill="currentColor"/><path d="M11 16.5 14.5 20 21.5 12.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>prime seguritech</span>
+    </a>
+    <a class="btn ghost" href="/">← Voltar ao site</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="head">
+    <span class="eyebrow">Demo · protótipo</span>
+    <div>
+      <h1>Teste a triagem do Sentinel</h1>
+      <p class="lead">Escolha um evento fictício, ou edite o JSON, e veja como o Claude organiza a ocorrência para o operador. É um protótipo: a decisão final é sempre de uma pessoa.</p>
+    </div>
+  </section>
+
+  <section class="lab">
+    <div class="card input">
+      <span class="label" id="lbl-cen">Cenários fictícios</span>
+      <div class="cenarios" id="cenarios" role="group" aria-labelledby="lbl-cen"></div>
+      <label class="label" for="evento">Evento (JSON)</label>
+      <textarea id="evento" spellcheck="false"></textarea>
+      <div class="row">
+        <span class="hint">Não use dados reais de clientes.</span>
+        <button class="btn" id="analisar" type="button">Analisar evento →</button>
+      </div>
+    </div>
+
+    <div class="card output" id="saida" aria-live="polite">
+      <span class="label">Triagem sugerida</span>
+      <p class="vazio">Escolha um cenário e clique em <b>Analisar evento</b>.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+  const $ = (s) => document.querySelector(s);
+  const area = $("#evento"), saida = $("#saida"), botao = $("#analisar");
+  let cenarios = {};
+
+  const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const lista = (itens, tag = "ul") => itens.length ? `<${tag}>${itens.map((i) => `<li>${esc(i)}</li>`).join("")}</${tag}>` : "<p class='hint'>—</p>";
+
+  function escolher(id) {
+    document.querySelectorAll(".cen").forEach((b) => b.setAttribute("aria-pressed", b.dataset.id === id));
+    area.value = JSON.stringify(cenarios[id].evento, null, 2);
+  }
+
+  async function carregarCenarios() {
+    try {
+      const r = await fetch("/api/cenarios");
+      cenarios = await r.json();
+      $("#cenarios").innerHTML = Object.entries(cenarios)
+        .map(([id, c]) => `<button type="button" class="cen" data-id="${esc(id)}" aria-pressed="false">${esc(c.titulo)}</button>`).join("");
+      document.querySelectorAll(".cen").forEach((b) => b.addEventListener("click", () => escolher(b.dataset.id)));
+      escolher(Object.keys(cenarios)[0]);
+    } catch {
+      area.value = "{}";
+    }
+  }
+
+  function mostrar(html) { saida.innerHTML = `<span class="label">Triagem sugerida</span>${html}`; }
+
+  botao.addEventListener("click", async () => {
+    let evento;
+    try { evento = JSON.parse(area.value); }
+    catch { return mostrar(`<p class="erro">O JSON do evento está inválido.</p>`); }
+
+    botao.disabled = true;
+    mostrar(`<div class="carregando"><span class="spin"></span>Claude analisando o evento…</div>`);
+    const inicio = performance.now();
+    try {
+      const r = await fetch("/api/triagem", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(evento) });
+      const dados = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(dados.erro || `Erro ${r.status}`);
+      const t = dados.triagem;
+      const seg = ((performance.now() - inicio) / 1000).toFixed(1);
+      mostrar(`
+        <div class="pri p-${esc(t.prioridade)}"><i></i>Prioridade ${esc(t.prioridade.replace("critica", "crítica").replace("media", "média"))}</div>
+        <div class="meta">
+          <span class="chip">confiança ${esc(t.confianca)}</span>
+          ${t.provavel_falso_alarme ? '<span class="chip">provável falso alarme</span>' : ""}
+          ${t.sugerir_acionar_autoridades ? '<span class="chip hot">sugere acionar autoridades</span>' : ""}
+        </div>
+        <div class="resumo">${esc(t.resumo)}</div>
+        <div class="sec"><span class="label">Ações sugeridas</span>${lista(t.acoes_sugeridas, "ol")}</div>
+        <div class="sec"><span class="label">Sinais considerados</span>${lista(t.sinais)}</div>
+        ${t.perguntas_ao_cliente.length ? `<div class="sec"><span class="label">Perguntar ao cliente</span>${lista(t.perguntas_ao_cliente)}</div>` : ""}
+        <div class="humano">
+          <p>Sugestão da IA. Confirmar, ligar para o cliente ou acionar autoridades é decisão do operador.</p>
+          <button class="btn dark-btn" type="button" disabled title="Ilustrativo na demo">Confirmar</button>
+          <button class="btn dark-btn ghost" type="button" disabled title="Ilustrativo na demo">Descartar</button>
+        </div>
+        <p class="rodape">${esc(dados.modelo)} · ${seg} s · ${dados.uso.entrada + dados.uso.saida} tokens</p>`);
+    } catch (e) {
+      mostrar(`<p class="erro">${esc(e.message)}</p>`);
+    } finally {
+      botao.disabled = false;
+    }
+  });
+
+  carregarCenarios();
+</script>
+</body>
+</html>

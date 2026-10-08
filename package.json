@@ -1,0 +1,12 @@
+{
+  "name": "prime-seguritech",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env scripts/dev.mjs",
+    "testar": "node --env-file-if-exists=.env scripts/testar-triagem.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.132.1"
+  }
+}
